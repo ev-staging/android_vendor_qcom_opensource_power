@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2020, The Linux Foundation. All rights reserved.
+ * Copyright (c) 2021, The LineageOS Project. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are
@@ -27,6 +28,7 @@
  * IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+#include "EvervolvPower.h"
 #include "Power.h"
 
 #include <android-base/logging.h>
@@ -34,6 +36,7 @@
 #include <android/binder_process.h>
 
 using aidl::android::hardware::power::impl::Power;
+using EvervolvPower = aidl::vendor::evervolv::power::impl::Power;
 
 int main() {
     ABinderProcess_setThreadPoolMaxThreadCount(0);
@@ -42,6 +45,18 @@ int main() {
     LOG(INFO) << "Instance " << instance;
     if(vib){
         binder_status_t status = AServiceManager_addService(vib->asBinder().get(), instance.c_str());
+        LOG(INFO) << "Status " << status;
+        if (status != STATUS_OK) {
+            LOG(ERROR) << "Could not register" << instance;
+        }
+    }
+
+    std::shared_ptr<EvervolvPower> evervolv_vib = ndk::SharedRefBase::make<EvervolvPower>();
+    const std::string evervolv_instance = std::string() + EvervolvPower::descriptor + "/default";
+    LOG(INFO) << "Instance " << evervolv_instance;
+    if (evervolv_vib) {
+        binder_status_t status =
+                AServiceManager_addService(evervolv_vib->asBinder().get(), evervolv_instance.c_str());
         LOG(INFO) << "Status " << status;
         if(status != STATUS_OK){
             LOG(ERROR) << "Could not register" << instance;

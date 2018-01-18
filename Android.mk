@@ -13,6 +13,7 @@ LOCAL_SHARED_LIBRARIES := \
     libbase \
     libutils \
     android.hardware.power-ndk_platform \
+    vendor.evervolv.power-ndk_platform \
     libbinder_ndk
 
 LOCAL_HEADER_LIBRARIES := \
@@ -25,6 +26,7 @@ LOCAL_SRC_FILES := \
     list.c \
     hint-data.c \
     Power.cpp \
+    EvervolvPower.cpp \
     main.cpp
 
 LOCAL_CFLAGS += -Wall -Wextra -Werror
